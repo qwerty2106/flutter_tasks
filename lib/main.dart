@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -42,12 +43,47 @@ class _MyHomePageState extends State<MyHomePage> {
           Container(width: double.infinity, height: 100, color: Colors.purple),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text('text1'), Text('text2'), Text('text3')],
+            children: [
+              Text(
+                'text1',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.indigo,
+                ),
+              ),
+              Text(
+                'text2',
+                style: TextStyle(
+                  fontSize: 18,
+                  decoration: TextDecoration.underline,
+                  color: Colors.blue,
+                ),
+              ),
+              Text(
+                'text3',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.lightBlue,
+                ),
+              ),
+            ],
           ),
           Container(
+            decoration: BoxDecoration(
+              color: Colors.purpleAccent,
+              border: Border.all(width: 3, color: Colors.pink),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.pink,
+                  blurRadius: 5,
+                  offset: Offset(5, 5),
+                ),
+              ],
+            ),
             width: double.infinity,
             height: 200,
-            color: Colors.purpleAccent,
           ),
 
           Padding(
