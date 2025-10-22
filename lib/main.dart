@@ -33,6 +33,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.mode_comment),
+        onPressed: () => print('Button pressed!'),
+      ),
       body: Column(
         children: [
           Container(width: double.infinity, height: 100, color: Colors.purple),
@@ -45,20 +49,38 @@ class _MyHomePageState extends State<MyHomePage> {
             height: 200,
             color: Colors.purpleAccent,
           ),
-          Expanded(
+
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Expanded(
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundImage: NetworkImage(
+                      'https://cdn-icons-png.flaticon.com/512/5302/5302210.png',
+                    ),
+                  ),
+                  CircleAvatar(radius: 30, backgroundColor: Colors.pinkAccent),
+                ],
+              ),
+            ),
+          ),
+
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: NetworkImage(
-                    'https://cdn-icons-png.flaticon.com/512/5302/5302210.png',
+                for (int i = 0; i < 20; i++)
+                  Container(
+                    margin: EdgeInsets.all(10),
+                    width: 100,
+                    height: 50,
+                    color: Colors.pinkAccent,
                   ),
-                ),
-                CircleAvatar(radius: 30, backgroundColor: Colors.pinkAccent,),
               ],
             ),
           ),
-          FloatingActionButton(onPressed: () => print('Button pressed!')),
         ],
       ),
     );
