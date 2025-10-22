@@ -40,7 +40,25 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [Text('text1'), Text('text2'), Text('text3')],
           ),
-          Container(width: double.infinity, height: 200, color: Colors.purpleAccent),
+          Container(
+            width: double.infinity,
+            height: 200,
+            color: Colors.purpleAccent,
+          ),
+          Expanded(
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: NetworkImage(
+                    'https://cdn-icons-png.flaticon.com/512/5302/5302210.png',
+                  ),
+                ),
+                CircleAvatar(radius: 30, backgroundColor: Colors.pinkAccent,),
+              ],
+            ),
+          ),
+          FloatingActionButton(onPressed: () => print('Button pressed!')),
         ],
       ),
     );
