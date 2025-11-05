@@ -14,15 +14,29 @@ void main() async {
 
 //Статический класс для запросов
 class Api {
-  static var dbName = 'messages';
   //Выборка всех записей
   static Future<dynamic> getData() {
-    return Supabase.instance.client.from(dbName).select();
+    return Supabase.instance.client.from('messages').select();
   }
 
   //Добавление записи
   static Future<dynamic> createData(message) {
-    return Supabase.instance.client.from(dbName).insert({'message': message});
+    return Supabase.instance.client.from('messages').insert({
+      'message': message,
+    });
+  }
+
+  //Регистрация
+  static Future<dynamic> signUp(login, password) {
+    return Supabase.instance.client.from('users').insert({
+      login: login,
+      password: password,
+    });
+  }
+
+  //Аутентификация
+  static Future<dynamic> signIn(login, password) {
+    return Supabase.instance.client.from('users').select().eq(login, password);
   }
 }
 
@@ -36,6 +50,72 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
       ),
       home: const MyHomePage(),
+    );
+  }
+}
+
+//LOGIN PAGE
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+  @override
+  State<LoginPage> createState() => __LoginPageState();
+}
+
+class __LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+  String login = "";
+  String password = "";
+
+  void _signIn() async {
+    if (login.trim() == "" || password.trim() == "") return;
+    await Api.signIn(login, password);
+    setState(() {});
+  }
+
+  void _signUp() async {
+    if (login.trim() == "" || password.trim() == "") return;
+    await Api.signUp(login, password);
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text('Login'),
+      ),
+      body: Column(
+        children: [
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextField(
+                  decoration: InputDecoration(labelText: 'Type your login'),
+                  onChanged: (value) {
+                    login = value;
+                  },
+                ),
+
+                TextField(
+                  decoration: InputDecoration(labelText: 'Type your password'),
+                  onChanged: (value) {
+                    password = value;
+                  },
+                ),
+
+                Row(
+                  children: [
+                    TextButton(onPressed: _signIn, child: Text('Sign In')),
+                    TextButton(onPressed: _signUp, child: Text('Sign Up')),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -73,15 +153,25 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               body: Column(
                 children: [
+                  //Кнопка авторизации
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginPage(),
+                        ),
+                      );
+                    },
+                    child: Text('Login'),
+                  ),
+
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          ...List.generate(data.length, (i) {
-                            return Text(data[i]['message']);
-                          }),
-                        ],
-                      ),
+                    child: ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        return Text(data[index]['message']);
+                      },
                     ),
                   ),
 
@@ -90,9 +180,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Row(
                       children: [
                         SizedBox(
-                          width: 100.0,
+                          width: 200,
                           child: TextField(
-                            decoration: InputDecoration(labelText: 'message'),
+                            decoration: InputDecoration(
+                              labelText: 'Type smth...',
+                            ),
                             onChanged: (value) {
                               message = value;
                             },
