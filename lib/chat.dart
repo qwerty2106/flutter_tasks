@@ -28,6 +28,7 @@ class Api {
 
   //Регистрация
   static Future<dynamic> signUp(login, password) {
+    print("$login $password");
     return Supabase.instance.client.from('users').insert({
       login: login,
       password: password,
@@ -87,32 +88,43 @@ class __LoginPageState extends State<LoginPage> {
       ),
       body: Column(
         children: [
-          Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextField(
-                  decoration: InputDecoration(labelText: 'Type your login'),
-                  onChanged: (value) {
-                    login = value;
-                  },
-                ),
+          Expanded(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextField(
+                    decoration: InputDecoration(labelText: 'Type your login'),
+                    onChanged: (value) {
+                      login = value;
+                    },
+                  ),
 
-                TextField(
-                  decoration: InputDecoration(labelText: 'Type your password'),
-                  onChanged: (value) {
-                    password = value;
-                  },
-                ),
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Type your password',
+                    ),
+                    onChanged: (value) {
+                      password = value;
+                    },
+                  ),
 
-                Row(
-                  children: [
-                    TextButton(onPressed: _signIn, child: Text('Sign In')),
-                    TextButton(onPressed: _signUp, child: Text('Sign Up')),
-                  ],
-                ),
-              ],
+                  Row(
+                    children: [
+                      TextButton(onPressed: _signIn, child: Text('Sign In')),
+                      TextButton(onPressed: _signUp, child: Text('Sign Up')),
+                    ],
+                  ),
+                ],
+              ),
             ),
+          ),
+
+          BottomNavigationBar(
+            items: [
+              BottomNavigationBarItem(label: 'home', icon: Icon(Icons.home)),
+              BottomNavigationBarItem(label: 'login', icon: Icon(Icons.login)),
+            ],
           ),
         ],
       ),
@@ -194,6 +206,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         TextButton(onPressed: _submit, child: Icon(Icons.send)),
                       ],
                     ),
+                  ),
+                  BottomNavigationBar(
+                    items: [
+                      BottomNavigationBarItem(
+                        label: 'home',
+                        icon: Icon(Icons.home),
+                      ),
+                      BottomNavigationBarItem(
+                        label: 'login',
+                        icon: Icon(Icons.login),
+                      ),
+                    ],
                   ),
                 ],
               ),
