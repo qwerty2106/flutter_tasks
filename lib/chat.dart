@@ -27,17 +27,19 @@ class Api {
   }
 
   //Регистрация
-  static Future<dynamic> signUp(login, password) {
-    print("$login $password");
-    return Supabase.instance.client.from('users').insert({
-      login: login,
+  static Future<dynamic> signUp(String login, String password) {
+    return Supabase.instance.client.auth.signUp(
+      email: login,
       password: password,
-    });
+    );
   }
 
   //Аутентификация
-  static Future<dynamic> signIn(login, password) {
-    return Supabase.instance.client.from('users').select().eq(login, password);
+  static Future<dynamic> signIn(String login, String password) {
+    return Supabase.instance.client.auth.signInWithPassword(
+      email: login,
+      password: password,
+    );
   }
 }
 
@@ -66,6 +68,7 @@ class __LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   String login = "";
   String password = "";
+  int _currentIndex = 1;
 
   void _signIn() async {
     if (login.trim() == "" || password.trim() == "") return;
@@ -121,6 +124,23 @@ class __LoginPageState extends State<LoginPage> {
           ),
 
           BottomNavigationBar(
+            currentIndex: _currentIndex,
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+              if (index == 0) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MyHomePage()),
+                );
+              } else if (index == 1) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                );
+              }
+            },
             items: [
               BottomNavigationBarItem(label: 'home', icon: Icon(Icons.home)),
               BottomNavigationBarItem(label: 'login', icon: Icon(Icons.login)),
@@ -141,6 +161,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final _formKey = GlobalKey<FormState>();
   String message = "";
+  int _currentIndex = 0;
   void _submit() async {
     if (message.trim() == "") return;
     await Api.createData(message);
@@ -157,7 +178,6 @@ class _MyHomePageState extends State<MyHomePage> {
             return Center(child: Text('${snapshot.error} occured'));
           } else if (snapshot.hasData) {
             final data = snapshot.data;
-
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -207,7 +227,29 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                   ),
+
                   BottomNavigationBar(
+                    currentIndex: _currentIndex,
+                    onTap: (index) {
+                      setState(() {
+                        _currentIndex = index;
+                      });
+                      if (index == 0) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MyHomePage(),
+                          ),
+                        );
+                      } else if (index == 1) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginPage(),
+                          ),
+                        );
+                      }
+                    },
                     items: [
                       BottomNavigationBarItem(
                         label: 'home',
